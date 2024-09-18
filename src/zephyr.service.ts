@@ -26,7 +26,7 @@ export class ZephyrService {
       throw new Error('"user" and/or "password" or "authorizationToken" options are missed. Please provide them in the config');
 
     this.host = options.host;
-    this.url = `${this.host}/rest/atm/1.0`;
+    this.url = `${this.host}/rest/atm/1.0`; // TODO VERIFICAR ESSE RELATIVE PATH
     this.user = options.user!;
     this.password = options.password!;
     this.basicAuthToken = Buffer.from(`${this.user}:${this.password}`).toString('base64');
@@ -37,19 +37,19 @@ export class ZephyrService {
       baseURL: this.url,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${this.authorizationToken}`,
+        Authorization: `JWT ${this.authorizationToken}`, // TODO MUDAR DE Basic PARA JWT
       },
       ...options,
     });
   }
 
   async createRun(items: ZephyrTestResult[], name = this.defaultRunName): Promise<string> {
-    const URL = `${this.url}/testrun`;
+    const URL = `${this.url}/testrun`; // TODO MUDAR PARA O DO ZEPHYR SQUAD
 
     try {
-      const response = await this.axios.post(URL, {
+      const response = await this.axios.put(URL, { // TODO MUDAR PARA PUT 
         name,
-        projectKey: this.projectKey,
+        projectKey: this.projectKey, // TODO MUDAR DE BODY PARA QUERY STRING
         items,
       });
 
