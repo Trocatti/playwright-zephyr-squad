@@ -14,10 +14,12 @@ export class ZephyrService {
   private readonly user: string;
   private readonly password: string;
   private readonly authorizationToken: string;
+  private readonly authorizationTokenPrefix: string;
   private readonly basicAuthToken: string;
-  private readonly projectKey: string;
   private readonly axios: Axios;
   private readonly defaultRunName = `[${new Date().toUTCString()}] - Automated run`;
+  private readonly queryString: Record<string, string>;
+  private readonly relativePath: string;
 
   constructor(options: ZephyrOptions) {
     if (!options.host) throw new Error('"host" option is missed. Please, provide it in the config');
@@ -26,30 +28,40 @@ export class ZephyrService {
       throw new Error('"user" and/or "password" or "authorizationToken" options are missed. Please provide them in the config');
 
     this.host = options.host;
-    this.url = `${this.host}/rest/atm/1.0`; // TODO VERIFICAR ESSE RELATIVE PATH
+    this.url = `${this.host}/rest/atm/1.0`; // TODO VERIFICAR O PATH
+    this.relativePath = options.relativePath ?? 'testrun'; // TODO VERIFICAR O RELATIVE PATH
+    this.queryString = {
+      ...options.queryString,
+      projectKey: options.projectKey,
+    };
+    
     this.user = options.user!;
     this.password = options.password!;
     this.basicAuthToken = Buffer.from(`${this.user}:${this.password}`).toString('base64');
+
     this.authorizationToken = options.authorizationToken ?? this.basicAuthToken;
-    this.projectKey = options.projectKey;
+    this.authorizationTokenPrefix = options.authorizationTokenPrefix ?? 'JWT';
+    if (this.basicAuthToken) {
+      this.authorizationTokenPrefix = 'Basic'
+    }
 
     this.axios = axios.create({
       baseURL: this.url,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `JWT ${this.authorizationToken}`, // TODO MUDAR DE Basic PARA JWT
+        Authorization: `${this.authorizationTokenPrefix} ${this.authorizationToken}`,
       },
       ...options,
     });
   }
 
   async createRun(items: ZephyrTestResult[], name = this.defaultRunName): Promise<string> {
-    const URL = `${this.url}/testrun`; // TODO MUDAR PARA O DO ZEPHYR SQUAD
+
+    const URL = `${this.url}/${this.relativePath}?${new URLSearchParams(this.queryString)}`; // TODO MUDAR PARA O DO ZEPHYR SQUAD
 
     try {
-      const response = await this.axios.put(URL, { // TODO MUDAR PARA PUT 
+      const response = await this.axios.put(URL, {
         name,
-        projectKey: this.projectKey, // TODO MUDAR DE BODY PARA QUERY STRING
         items,
       });
 
