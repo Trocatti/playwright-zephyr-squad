@@ -87,8 +87,8 @@ And you'll see the result in the Zephyr:
 
 ## License
 
-playwright-zephyr is [MIT licensed](./LICENSE).
+playwright-zephyr-squad is [MIT licensed](./LICENSE).
 
 ## Author
 
-Yevhen Laichenkov <elaichenkov@gmail.com>
+Guilherme Trocatti <guilhermetrocatti@hotmail.com>

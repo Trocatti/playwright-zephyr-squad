@@ -1,5 +1,5 @@
 {
-  "name": "playwright-zephyr",
+  "name": "playwright-zephyr-squad",
   "version": "1.0.0",
   "description": "Zephyr squad reporter for the Playwright",
   "main": "lib/src/index.js",
