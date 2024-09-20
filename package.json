@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/elaichenkov/playwright-zephyr.git"
+    "url": "git+https://github.com/Trocatti/playwright-zephyr-squad.git"
   },
   "keywords": [
     "playwright",
@@ -30,12 +30,12 @@
     "typescript",
     "tools"
   ],
-  "author": "Yevhen Laichenkov <elaichenkov@gmail.com>",
+  "author": "Guilherme Trocatti <guilhermetrocatti@hotmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/elaichenkov/playwright-zephyr/issues"
+    "url": "https://github.com/Trocatti/playwright-zephyr-squad/issues"
   },
-  "homepage": "https://github.com/elaichenkov/playwright-zephyr#readme",
+  "homepage": "https://github.com/Trocatti/playwright-zephyr-squad#readme",
   "devDependencies": {
     "@playwright/test": "^1.47.1",
     "prettier": "^3.0.1",
