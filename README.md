@@ -48,7 +48,7 @@ If your test cycle requires custom fields, you can specify them in `testCycle` o
 
 Others settings types
 
-```javascript
+```typescript
 host: string;
 projectKey: string;
 user?: string;
