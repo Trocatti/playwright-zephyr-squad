@@ -34,7 +34,7 @@ export class ZephyrService {
       ...options.queryString,
       projectKey: options.projectKey,
     };
-    
+
     this.user = options.user!;
     this.password = options.password!;
     this.basicAuthToken = Buffer.from(`${this.user}:${this.password}`).toString('base64');
@@ -42,7 +42,7 @@ export class ZephyrService {
     this.authorizationToken = options.authorizationToken ?? this.basicAuthToken;
     this.authorizationTokenPrefix = options.authorizationTokenPrefix ?? 'JWT';
     if (this.basicAuthToken) {
-      this.authorizationTokenPrefix = 'Basic'
+      this.authorizationTokenPrefix = 'Basic';
     }
 
     this.axios = axios.create({
@@ -56,7 +56,6 @@ export class ZephyrService {
   }
 
   async createRun(items: ZephyrTestResult[], name = this.defaultRunName): Promise<string> {
-
     const URL = `${this.url}/${this.relativePath}?${new URLSearchParams(this.queryString)}`; // TODO MUDAR PARA O DO ZEPHYR SQUAD
 
     try {
