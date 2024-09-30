@@ -47,7 +47,7 @@ export class ZephyrService {
         secretKey: this.secretKey,
         host: this.host,
         axios: this.axios,
-      })
+      });
 
       for (const item of items) {
         const executions = await ZqlSearch.search(item.testCaseKey, item.status);
@@ -69,9 +69,8 @@ export class ZephyrService {
           assigneeType: 'currentUser',
         };
 
-        await ZqlUpdate.update(payload)
+        await ZqlUpdate.update(payload);
       }
-  
     } catch (error) {
       throw error;
     }
