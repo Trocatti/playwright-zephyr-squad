@@ -1,96 +1,79 @@
+import { Axios } from 'axios';
 import { ZephyrTestResult } from './../types/zephyr.types';
-import axios, { Axios, AxiosError } from 'axios';
 import { ZephyrOptions } from '../types/zephyr.types';
-import { inspect } from 'util';
-import { bold, green } from 'picocolors';
-
-function isAxiosError(error: any): error is AxiosError {
-  return error.isAxiosError === true;
-}
+import ZephyrHeaderBuilder from './zephyr-header-builder';
+import ZephyrZqlSearchRequest from './zephyr-zqlsearch-request';
+import ZephyrExecutionUpdateRequest from './zephyr-execution-update-request';
 
 export class ZephyrService {
   private readonly host: string;
-  private readonly url: string;
-  private readonly user: string;
-  private readonly password: string;
-  private readonly authorizationToken: string;
-  private readonly authorizationTokenPrefix: string;
-  private readonly basicAuthToken: string;
   private readonly axios: Axios;
-  private readonly defaultRunName = `[${new Date().toUTCString()}] - Automated run`;
-  private readonly queryString: Record<string, string>;
-  private readonly relativePath: string;
+  private readonly accessKey: string;
+  private readonly accountId: string;
+  private readonly secretKey: string;
+  private readonly projectId: string;
+
+  // private readonly defaultRunName = `[${new Date().toUTCString()}] - Automated run`;
 
   constructor(options: ZephyrOptions) {
     if (!options.host) throw new Error('"host" option is missed. Please, provide it in the config');
     if (!options.projectKey) throw new Error('"projectKey" option is missed. Please, provide it in the config');
-    if ((!options.user || !options.password) && !options.authorizationToken)
-      throw new Error('"user" and/or "password" or "authorizationToken" options are missed. Please provide them in the config');
+    if (!options.accessKey) throw new Error('"accessKey" option is missed. Please, provide it in the config');
+    if (!options.accountId) throw new Error('"accountId" option is missed. Please, provide it in the config');
+    if (!options.secretKey) throw new Error('"secrectKey" option is missed. Please, provide it in the config');
 
     this.host = options.host;
-    this.url = `${this.host}/rest/atm/1.0`; // TODO VERIFICAR O PATH
-    this.relativePath = options.relativePath ?? 'testrun'; // TODO VERIFICAR O RELATIVE PATH
-    this.queryString = {
-      ...options.queryString,
-      projectKey: options.projectKey,
-    };
+    this.accessKey = options.accessKey;
+    this.accountId = options.accountId;
+    this.secretKey = options.secretKey;
+    this.projectId = options.projectKey;
 
-    this.user = options.user!;
-    this.password = options.password!;
-    this.basicAuthToken = Buffer.from(`${this.user}:${this.password}`).toString('base64');
-
-    this.authorizationToken = options.authorizationToken ?? this.basicAuthToken;
-    this.authorizationTokenPrefix = options.authorizationTokenPrefix ?? 'JWT';
-    if (this.basicAuthToken) {
-      this.authorizationTokenPrefix = 'Basic';
-    }
-
-    this.axios = axios.create({
-      baseURL: this.url,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `${this.authorizationTokenPrefix} ${this.authorizationToken}`,
-      },
-      ...options,
-    });
+    this.axios = new ZephyrHeaderBuilder(options, this.host, this.accessKey).build();
   }
 
-  async createRun(items: ZephyrTestResult[], name = this.defaultRunName): Promise<string> {
-    const URL = `${this.url}/${this.relativePath}?${new URLSearchParams(this.queryString)}`; // TODO MUDAR PARA O DO ZEPHYR SQUAD
-
+  async createRun(items: ZephyrTestResult[]): Promise<void> {
     try {
-      const response = await this.axios.put(URL, {
-        name,
-        items,
+      const ZqlSearch = new ZephyrZqlSearchRequest({
+        accessKey: this.accessKey,
+        accountId: this.accountId,
+        secretKey: this.secretKey,
+        host: this.host,
+        axios: this.axios,
       });
 
-      if (response.status !== 201) throw new Error(`${response.status} - Failed to create test cycle`);
+      const ZqlUpdate = new ZephyrExecutionUpdateRequest({
+        accessKey: this.accessKey,
+        accountId: this.accountId,
+        secretKey: this.secretKey,
+        host: this.host,
+        axios: this.axios,
+      })
 
-      const {
-        data: { key },
-      } = response;
+      for (const item of items) {
+        const executions = await ZqlSearch.search(item.testCaseKey, item.status);
 
-      console.log(`${bold(green(`✅ Test cycle ${key} has been created`))}`);
-      console.log(`${bold(green('👇 Check out the test result'))}`);
-      console.log(`🔗 ${this.host}/secure/Tests.jspa#/testPlayer/${key}`);
-
-      return response.data.key;
-    } catch (error) {
-      if (isAxiosError(error)) {
-        console.error(`Config: ${inspect(error.config)}`);
-
-        if (error.response) {
-          throw new Error(
-            `\nStatus: ${error.response.status} \nHeaders: ${inspect(error.response.headers)} \nData: ${inspect(error.response.data)}`,
-          );
-        } else if (error.request) {
-          throw new Error(`The request was made but no response was received. \n Error: ${inspect(error.toJSON())}`);
-        } else {
-          throw new Error(`Something happened in setting up the request that triggered an Error\n : ${inspect(error.message)}`);
+        if (executions.length === 0) {
+          return;
         }
-      }
 
-      throw new Error(`\nUnknown error: ${error}`);
+        const { id, cycleId, issueId, versionId, status } = executions[0] as Record<string, any>;
+
+        const payload = {
+          id,
+          status,
+          cycleId,
+          issueId,
+          versionId,
+          projectId: this.projectId,
+          comment: 'Atualizado por automação',
+          assigneeType: 'currentUser',
+        };
+
+        await ZqlUpdate.update(payload)
+      }
+  
+    } catch (error) {
+      throw error;
     }
   }
 }

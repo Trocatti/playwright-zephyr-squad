@@ -1,15 +1,15 @@
-import type { ZephyrOptions, ZephyrStatus, ZephyrTestResult } from '../types/zephyr.types';
+import { ZephyrStatusEnum, type ZephyrOptions, type ZephyrStatus, type ZephyrTestResult } from '../types/zephyr.types';
 import type { Reporter, TestCase, TestResult, TestStatus } from '@playwright/test/reporter';
 
 import { ZephyrService } from './zephyr.service';
 
 function convertPwStatusToZephyr(status: TestStatus): ZephyrStatus {
-  if (status === 'passed') return 'Pass';
-  if (status === 'failed') return 'Fail';
-  if (status === 'skipped') return 'Not Executed';
-  if (status === 'timedOut') return 'Blocked';
+  if (status === 'passed') return ZephyrStatusEnum.Pass;
+  if (status === 'failed') return ZephyrStatusEnum.Fail;
+  if (status === 'skipped') return ZephyrStatusEnum.NotExecuted;
+  if (status === 'timedOut') return ZephyrStatusEnum.NotExecuted;
 
-  return 'Not Executed';
+  return ZephyrStatusEnum.NotExecuted;
 }
 
 class ZephyrReporter implements Reporter {
@@ -34,13 +34,13 @@ class ZephyrReporter implements Reporter {
   onTestEnd(test: TestCase, result: TestResult) {
     if (test.title.match(this.testCaseKeyPattern) && test.title.match(this.testCaseKeyPattern)!.length > 1) {
       const [, projectName] = test.titlePath();
-      const [, testCaseId] = test.title.match(this.testCaseKeyPattern)!;
-      const testCaseKey = `${this.projectKey}-${testCaseId}`;
+      const [, testCaseId = ''] = test.title.match(this.testCaseKeyPattern)!;
       const status = convertPwStatusToZephyr(result.status);
 
       this.testResults.push({
-        testCaseKey,
         status,
+        testCaseKey: testCaseId,
+        projectKey: this.projectKey,
         environment: this.environment ?? projectName ?? 'Playwright Test',
         executionDate: new Date().toISOString(),
       });
