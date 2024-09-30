@@ -17,9 +17,11 @@ Add **Server** reporter to your `playwright.config.ts` configuration file
 {
   ... // <--- others configs
   reporter: [['playwright-zephyr-squad', {
-    host: 'https://jira.your-company-domain.com/',
-    authorizationToken: 'SVSdrtwgDSA312342--',
-    projectKey: 'JARV',
+     host: '',
+      projectKey: '',
+      accountId: '',
+      accessKey: '',
+      secretKey: '',
   }]],
 }
 ```
@@ -31,9 +33,11 @@ If your test cycle requires custom fields, you can specify them in `testCycle` o
     ... // <--- others configs
     reporter: [
     ['playwright-zephyr-squad', {
-      host: 'https://jira.your-company-domain.com/',
-      authorizationToken: 'SVSdrtwgDSA312342--',
-      projectKey: 'JARV'
+       host: '',
+      projectKey: '',
+      accountId: '',
+      accessKey: '',
+      secretKey: '',
       testCycle: {
           name: `Automated Playwright Run - ${new Date().toISOString()}`,
           customFields: {
@@ -44,20 +48,6 @@ If your test cycle requires custom fields, you can specify them in `testCycle` o
     }],
   ],
 }
-```
-
-Others settings types
-
-```typescript
-host: string;
-projectKey: string;
-user?: string;
-password?: string;
-authorizationToken?: string;
-authorizationTokenPrefix?: string;
-environment?: string;
-queryString?: Record<string, string>;
-relativePath?: string;
 ```
 
 Read how to get Zephyr Squad authorization token [here](https://support.smartbear.com/zephyr-squad-cloud/docs/en/rest-api/generate-api-access-token.html#:~:text=Click%20your%20Jira%20profile%20icon,to%20copy%20the%20access%20token.).
