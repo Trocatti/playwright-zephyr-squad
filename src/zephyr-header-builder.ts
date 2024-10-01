@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ZephyrOptions } from '../types/zephyr.types';
+import { ZephyrOptions } from './types/zephyr.types';
 
 class ZephyrHeaderBuilder {
   private readonly options: ZephyrOptions;

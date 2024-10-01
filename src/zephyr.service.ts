@@ -1,6 +1,6 @@
 import { Axios } from 'axios';
-import { ZephyrTestResult } from './../types/zephyr.types';
-import { ZephyrOptions } from '../types/zephyr.types';
+import { ZephyrTestResult } from './types/zephyr.types';
+import { ZephyrOptions } from './types/zephyr.types';
 import ZephyrHeaderBuilder from './zephyr-header-builder';
 import ZephyrZqlSearchRequest from './zephyr-zqlsearch-request';
 import ZephyrExecutionUpdateRequest from './zephyr-execution-update-request';

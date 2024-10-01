@@ -1,4 +1,4 @@
-import { ZephyrStatusEnum, type ZephyrOptions, type ZephyrStatus, type ZephyrTestResult } from '../types/zephyr.types';
+import { ZephyrStatusEnum, type ZephyrOptions, type ZephyrStatus, type ZephyrTestResult } from './types/zephyr.types';
 import type { Reporter, TestCase, TestResult, TestStatus } from '@playwright/test/reporter';
 
 import { ZephyrService } from './zephyr.service';
