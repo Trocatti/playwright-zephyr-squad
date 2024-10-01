@@ -28,5 +28,5 @@
     "outDir": "./lib",
     "declaration": true
   },
-  "include": ["./src", "types", "utils"],
+  "include": ["./src"],
 }

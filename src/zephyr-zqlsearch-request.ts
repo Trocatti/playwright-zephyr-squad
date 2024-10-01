@@ -1,7 +1,7 @@
 import { Axios } from 'axios';
 import { inspect } from 'util';
-import { isAxiosError } from '../utils/axios-wrapper.utils';
-import { ZephyrOptionsRequest } from '../types/zephyr.types';
+import { isAxiosError } from './axios-wrapper.utils';
+import { ZephyrOptionsRequest } from './zephyr.types';
 import { GenerateToken } from './generate-token';
 
 const HTTP_METHOD = 'POST';
