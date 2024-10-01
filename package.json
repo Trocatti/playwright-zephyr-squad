@@ -1,6 +1,6 @@
 {
   "name": "playwright-zephyr-squad",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "Zephyr squad reporter for the Playwright",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
