@@ -18,7 +18,6 @@ Add **Server** reporter to your `playwright.config.ts` configuration file
   ... // <--- others configs
   reporter: [['playwright-zephyr-squad', {
      host: '',
-      projectKey: '',
       accountId: '',
       accessKey: '',
       secretKey: '',
@@ -34,7 +33,6 @@ If your test cycle requires custom fields, you can specify them in `testCycle` o
     reporter: [
     ['playwright-zephyr-squad', {
        host: '',
-      projectKey: '',
       accountId: '',
       accessKey: '',
       secretKey: '',

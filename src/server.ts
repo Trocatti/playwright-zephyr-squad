@@ -15,7 +15,6 @@ function convertPwStatusToZephyr(status: TestStatus): ZephyrStatus {
 class ZephyrReporter implements Reporter {
   private zephyrService!: ZephyrService;
   private testResults: ZephyrTestResult[] = [];
-  private projectKey!: string;
   private testCaseKeyPattern = /\[(.*?)\]/;
   private options: ZephyrOptions;
   environment: string | undefined;
@@ -25,7 +24,6 @@ class ZephyrReporter implements Reporter {
   }
 
   async onBegin() {
-    this.projectKey = this.options.projectKey;
     this.environment = this.options.environment;
 
     this.zephyrService = new ZephyrService(this.options);
@@ -40,7 +38,6 @@ class ZephyrReporter implements Reporter {
       this.testResults.push({
         status,
         testCaseKey: testCaseId,
-        projectKey: this.projectKey,
         environment: this.environment ?? projectName ?? 'Playwright Test',
         executionDate: new Date().toISOString(),
       });

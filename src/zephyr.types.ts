@@ -20,7 +20,6 @@ export interface ZephyrOptions extends AxiosRequestConfig {
   accountId: string;
   accessKey: string;
   secretKey: string;
-  projectKey: string;
   environment?: string;
 }
 
@@ -34,7 +33,6 @@ export type ZephyrOptionsRequest = {
 
 export type ZephyrTestResult = {
   testCaseKey: string;
-  projectKey: string;
   status: ZephyrStatus;
   environment?: string;
   executionTime?: string;

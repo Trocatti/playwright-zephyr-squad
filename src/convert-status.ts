@@ -2,7 +2,6 @@ import type { AxiosRequestConfig } from 'axios';
 
 export interface ZephyrOptions extends AxiosRequestConfig {
   authorizationToken: string;
-  projectKey: string;
   testCycle?: ZephyrTestCycle;
   nodeInternalTlsRejectUnauthorized?: '0' | '1'; // NODE_TLS_REJECT_UNAUTHORIZED
 }

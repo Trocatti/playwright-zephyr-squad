@@ -55,7 +55,7 @@ class ZephyrZqlSearchRequest {
       const { searchObjectList } = response.data;
 
       if (searchObjectList.length === 0) {
-        throw new Error('No open executions found for task.');
+        throw new Error(`No open executions found for task: ${testCaseKey}`);
       }
 
       return searchObjectList.map((item: ZephyrCycleSummary) => {

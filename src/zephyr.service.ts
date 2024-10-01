@@ -11,13 +11,9 @@ export class ZephyrService {
   private readonly accessKey: string;
   private readonly accountId: string;
   private readonly secretKey: string;
-  private readonly projectId: string;
-
-  // private readonly defaultRunName = `[${new Date().toUTCString()}] - Automated run`;
 
   constructor(options: ZephyrOptions) {
     if (!options.host) throw new Error('"host" option is missed. Please, provide it in the config');
-    if (!options.projectKey) throw new Error('"projectKey" option is missed. Please, provide it in the config');
     if (!options.accessKey) throw new Error('"accessKey" option is missed. Please, provide it in the config');
     if (!options.accountId) throw new Error('"accountId" option is missed. Please, provide it in the config');
     if (!options.secretKey) throw new Error('"secrectKey" option is missed. Please, provide it in the config');
@@ -26,7 +22,6 @@ export class ZephyrService {
     this.accessKey = options.accessKey;
     this.accountId = options.accountId;
     this.secretKey = options.secretKey;
-    this.projectId = options.projectKey;
 
     this.axios = new ZephyrHeaderBuilder(options, this.host, this.accessKey).build();
   }
@@ -56,7 +51,7 @@ export class ZephyrService {
           return;
         }
 
-        const { id, cycleId, issueId, versionId, status } = executions[0] as Record<string, any>;
+        const { id, cycleId, issueId, versionId, status, projectId } = executions[0] as Record<string, any>;
 
         const payload = {
           id,
@@ -64,8 +59,8 @@ export class ZephyrService {
           cycleId,
           issueId,
           versionId,
-          projectId: this.projectId,
-          comment: 'Atualizado por automação',
+          projectId,
+          comment: `Atualizado por automação [${new Date().toUTCString()}]`,
           assigneeType: 'currentUser',
         };
 
