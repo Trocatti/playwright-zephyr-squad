@@ -8,7 +8,7 @@
     "lib/src"
   ],
   "scripts": {
-    "prepare": "npm run build",
+    "prepare": "npm run version && npm run build",
     "version": "npm run format",
     "build": "rm -rf lib && tsc",
     "release": "release-it --github.release",
