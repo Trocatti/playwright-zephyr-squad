@@ -1,8 +1,8 @@
 import { Axios } from 'axios';
 import { inspect } from 'util';
 import { bold, green } from 'picocolors';
-import { isAxiosError } from './utils/axios-wrapper.utils';
-import { ZephyrOptionsRequest, ZephyrPayload } from './types/zephyr.types';
+import { isAxiosError } from '../utils/axios-wrapper.utils';
+import { ZephyrOptionsRequest, ZephyrPayload } from '../types/zephyr.types';
 import { GenerateToken } from './generate-token';
 
 const HTTP_METHOD = 'PUT';
